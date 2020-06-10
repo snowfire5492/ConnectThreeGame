@@ -5,7 +5,12 @@ import androidx.appcompat.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
+import android.widget.Button;
+//import android.widget.GridLayout;
+import androidx.gridlayout.widget.GridLayout;
+import android.widget.GridView;
 import android.widget.ImageView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 public class MainActivity extends AppCompatActivity {
@@ -35,9 +40,9 @@ public class MainActivity extends AppCompatActivity {
             counter.animate().translationYBy(1000).rotation(3600).setDuration(1000);    // move into place
 
             if( playerHasWon() && afroTurn ) {
-                Toast.makeText(this, "Afro Warrior Wins!!!", Toast.LENGTH_SHORT).show();
+                showWinner("Afro");
             } else if( playerHasWon() && !afroTurn ) {
-                Toast.makeText(this, "Asian Warrior Wins!!!", Toast.LENGTH_SHORT).show();
+                showWinner("Asian");
             }
 
             // next players turn
@@ -59,6 +64,42 @@ public class MainActivity extends AppCompatActivity {
 
     }
 
+    private void showWinner(String winner){
+        TextView textView = (TextView) findViewById(R.id.textViewWinner);
+        textView.setTranslationX(-1500);
+        textView.setText(winner + " Warrior Wins!!!");
+        textView.animate().translationXBy(1500).alphaBy(1).setDuration(2000);
+    }
+
+    public void playAgain(View view) {
+        Button replayBtn = (Button) findViewById(R.id.buttonPlayAgain);
+        replayBtn.setClickable(false);
+        replayBtn.setAlpha(0);
+
+        findViewById(R.id.textViewWinner).setAlpha(0);
+        gameActive = true;
+        afroTurn = true;
+
+        resetGameState();
+
+        resetGameBoard();
+    }
+
+    private void resetGameBoard() {
+        GridLayout gridLayout = findViewById(R.id.gridLayout);
+        for (int i = 0; i< gridLayout.getChildCount(); ++i) {
+            ImageView child = (ImageView) gridLayout.getChildAt(i);
+            //child.setImageResource(0);
+            child.setImageDrawable(null);
+        }
+    }
+
+    private void resetGameState() {
+        for (int i = 0; i < gameState.length; ++i){
+            gameState[i] = "empty";
+        }
+    }
+
     private boolean playerHasWon() {
 
         for (int[] winState: winningStates) {
@@ -67,6 +108,11 @@ public class MainActivity extends AppCompatActivity {
                     && gameState[winState[0]] != "empty") {
 
                 gameActive = false;
+
+                Button playAgainBtn = (Button) findViewById(R.id.buttonPlayAgain);
+                playAgainBtn.setTranslationY(1000);
+                playAgainBtn.animate().translationYBy(-1000).alphaBy(1).setDuration(3000);
+                playAgainBtn.setClickable(true);
                 return true;
             }
         }
