@@ -1,3 +1,4 @@
 <resources>
     <string name="app_name">ConnectThreeGame</string>
+    <string name="connect_three">Connect Three</string>
 </resources>
