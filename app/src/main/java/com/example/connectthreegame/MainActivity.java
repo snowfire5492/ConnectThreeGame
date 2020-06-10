@@ -11,14 +11,16 @@ import android.widget.Toast;
 public class MainActivity extends AppCompatActivity {
 
     private boolean afroTurn = true;
-    private String[] gameState = {"none", "none", "none"
-                                , "none", "none", "none"
-                                , "none", "none", "none"};
+    private String[] gameState = {"empty", "empty", "empty"
+                                , "empty", "empty", "empty"
+                                , "empty", "empty", "empty"};
+    
+    private int[][] winningStates = {{0,1,2}, {3,4,5}, {6,7,8}, {0,3,6}, {1,4,7}, {2,5,8}, {0,4,8}, {2,4,6}};
 
     public void placeGamePiece(View view) {
         ImageView counter = (ImageView) view;   // just get an image view of the view to access resources
 
-        if( gameState[Integer.parseInt(counter.getTag().toString())]== "none") {
+        if( gameState[Integer.parseInt(counter.getTag().toString())]== "empty") {
 
             counter.setTranslationY(-1000);         // place view off of screen
 
@@ -55,24 +57,12 @@ public class MainActivity extends AppCompatActivity {
 
     private boolean playerHasWon() {
 
-        // horizontal win
-        if( gameState[0] == gameState[1] && gameState[0] == gameState[2] && gameState[0] != "none" ||
-                gameState[3] == gameState[4] && gameState[3] == gameState[5] && gameState[3] != "none"||
-                gameState[6] == gameState[7] && gameState[6] == gameState[8] && gameState[6] != "none") {
-            return true;
-        }
-
-        // vertical win
-        if( gameState[0] == gameState[3] && gameState[0] == gameState[6] && gameState[0] != "none" ||
-                gameState[1] == gameState[4] && gameState[1] == gameState[7] && gameState[1] != "none"||
-                gameState[2] == gameState[5] && gameState[2] == gameState[8] && gameState[2] != "none") {
-            return true;
-        }
-
-        // diagonal win
-        if( gameState[0] == gameState[4] && gameState[0] == gameState[8] && gameState[0] != "none" ||
-                gameState[6] == gameState[4] && gameState[6] == gameState[2] && gameState[6] != "none") {
-            return true;
+        for (int[] winState: winningStates) {
+            if(gameState[winState[0]] == gameState[winState[1]] 
+                    && gameState[winState[1]] == gameState[winState[2]] 
+                    && gameState[winState[0]] != "empty") {
+                return true;
+            }
         }
 
         return false;
@@ -81,7 +71,7 @@ public class MainActivity extends AppCompatActivity {
     private boolean boardIsFull() {
 
         for (String el: gameState) {
-            if (el == "none") {
+            if (el == "empty") {
                 return false;
             }
         }
