@@ -10,7 +10,7 @@ import android.widget.Toast;
 
 public class MainActivity extends AppCompatActivity {
 
-    private boolean afroTurn = true;
+    private boolean afroTurn = true, gameActive = true;
     private String[] gameState = {"empty", "empty", "empty"
                                 , "empty", "empty", "empty"
                                 , "empty", "empty", "empty"};
@@ -20,7 +20,7 @@ public class MainActivity extends AppCompatActivity {
     public void placeGamePiece(View view) {
         ImageView counter = (ImageView) view;   // just get an image view of the view to access resources
 
-        if( gameState[Integer.parseInt(counter.getTag().toString())]== "empty") {
+        if( gameState[Integer.parseInt(counter.getTag().toString())]== "empty" && gameActive ) {
 
             counter.setTranslationY(-1000);         // place view off of screen
 
@@ -44,14 +44,18 @@ public class MainActivity extends AppCompatActivity {
             if(afroTurn) afroTurn = false;
             else afroTurn = true;
 
-        } else {
+        } else if (gameActive) {
             Toast.makeText(this, "Try Different Spot", Toast.LENGTH_SHORT).show();
         }
 
-        if (boardIsFull() && !playerHasWon()) {
+        if (boardIsFull() && !playerHasWon() && gameActive) {
             Toast.makeText(this, "Tie Game", Toast.LENGTH_SHORT).show();
+            gameActive = false;
         }
 
+        if (!gameActive) {
+            Toast.makeText(this, "Please Play Again", Toast.LENGTH_SHORT).show();
+        }
 
     }
 
@@ -61,6 +65,8 @@ public class MainActivity extends AppCompatActivity {
             if(gameState[winState[0]] == gameState[winState[1]] 
                     && gameState[winState[1]] == gameState[winState[2]] 
                     && gameState[winState[0]] != "empty") {
+
+                gameActive = false;
                 return true;
             }
         }
@@ -71,7 +77,7 @@ public class MainActivity extends AppCompatActivity {
     private boolean boardIsFull() {
 
         for (String el: gameState) {
-            if (el == "empty" ) {
+            if (el == "empty") {
                 return false;
             }
         }
