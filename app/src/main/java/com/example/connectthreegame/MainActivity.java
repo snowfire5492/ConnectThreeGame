@@ -71,7 +71,7 @@ public class MainActivity extends AppCompatActivity {
     private boolean boardIsFull() {
 
         for (String el: gameState) {
-            if (el == "empty") {
+            if (el == "empty" ) {
                 return false;
             }
         }
